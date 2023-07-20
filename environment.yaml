@@ -1,0 +1,17 @@
+name: orbit-agent
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - matplotlib
+  - pip
+  - pip:
+    - openai
+    - lightweight-charts
+    - langchain
+    - google-search-results
+    - yfinance
+    - beautifulsoup4
