@@ -1,3 +1,4 @@
 secret.py
 
-app/*/output/*
+app/*/output/human_readable/*
+app/*/output/machine_readable/*

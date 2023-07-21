@@ -1,3 +1,4 @@
+README.md
 setup.py
 orbit_agent.egg-info/PKG-INFO
 orbit_agent.egg-info/SOURCES.txt
