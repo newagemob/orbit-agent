@@ -1,5 +1,14 @@
 README.md
 setup.py
+app/__init__.py
+app/analyze/__init__.py
+app/analyze/rtStockAnalysis.py
+app/compare/__init__.py
+app/compare/rtStockComparison.py
+app/scrape/__init__.py
+app/scrape/rtStockData.py
+app/tot/__init__.py
+app/tot/produceDecision.py
 orbit_agent.egg-info/PKG-INFO
 orbit_agent.egg-info/SOURCES.txt
 orbit_agent.egg-info/dependency_links.txt
