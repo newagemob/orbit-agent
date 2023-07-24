@@ -1,10 +1,8 @@
 README.md
 setup.py
 app/__init__.py
-app/analyze/__init__.py
-app/analyze/rtStockAnalysis.py
-app/compare/__init__.py
-app/compare/rtStockComparison.py
+app/dataHandler/__init__.py
+app/dataHandler/featureEngineering.py
 app/scrape/__init__.py
 app/scrape/rtStockData.py
 app/tot/__init__.py

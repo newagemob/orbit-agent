@@ -1,24 +1,9 @@
-"""
-Scrape real-time stock data from Yahoo Finance (yfinance) API
-Looking to use PyCoinGecko API for crypto data in the future
-  
-  - serpAPI: https://serpapi.com/
-  - yfinance API: https://pypi.org/project/yfinance/
-  
-Objectives:
-
-  - Gather "general intelligence" on a specific stock/[stocks] via serpAPI to CSV file
-  - Add historical price data for a specific stock/[stocks] via yfinance API to CSV file
-  - Pass system_prompt + CSV file to OpenAI API for analysis
-  - Return analysis to user
-"""
-
-import argparse
 import yfinance as yf
 import json
 import pandas as pd
 import datetime as dt
 from pathlib import Path
+from app.dataHandler.featureEngineering import FeatureEngineering
 
 app_path = Path(__file__).parent.parent
 
@@ -26,10 +11,9 @@ app_path = Path(__file__).parent.parent
 class RTStockData:
     def __init__(self, tickers):
         self.tickers = tickers
+        self.historical_data = {}
 
-    def get_historical_ticker_data(self, ticker, period):
-        all_ticker_data = []
-
+    def store_historical_data(self, period):
         for ticker in self.tickers:
             # Scrape ticker price via yfinance API
             ticker_info = yf.Ticker(ticker)
@@ -58,54 +42,117 @@ class RTStockData:
                 "Date Collected": dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
             }
 
-            all_ticker_data.append(ticker_combined_data)
-
             # Save Machine Readable DataFrame for future ML training
             ticker_df = pd.DataFrame([ticker_combined_data])
             ticker_df.to_json(
-                f"{app_path}/scrape/output/machine_readable/historical_mr_scraped_data_{ticker}_{dt.datetime.now().strftime('%Y%m%d%H%M')}.json"
+                f"{app_path}/scrape/output/machine_readable/historical_{ticker}_{dt.datetime.now().strftime('%Y%m%d%H%M')}.json"
             )
 
-    def get_last_ten_days(self):
+    def get_last_ten_days(self, historical_data):
         # Create a dictionary to store the last ten days of stock data for each ticker
         last_ten_days_data = {}
 
         for ticker in self.tickers:
-            # Load historical data for the ticker
-            filename = f"{app_path}/scrape/output/machine_readable/historical_mr_scraped_data_{ticker}_{dt.datetime.now().strftime('%Y%m%d%H%M')}.json"
-            with open(filename, "r") as file:
-                historical_data = json.load(file)
-
             # Extract the last ten days data and convert it to a DataFrame
-            ticker_price_data = historical_data["Ticker_Price_Data"]["0"]
+            ticker_price_data = historical_data[ticker]["Ticker_Price_Data"]["0"]
             last_ten_days_data[ticker] = ticker_price_data[-10:]
 
-        # Save last ten days data into separate dataframes for each stock
-        for ticker, data in last_ten_days_data.items():
-            # Create a dictionary to store the last ten days of stock data for each ticker
-            last_ten_days_data = {
-                "Ticker": ticker,
-                "Ticker_Price_Data": data,
-                "Date Collected": dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
-            }
-
-            # Save Machine Readable DataFrame for future ML training
-            ticker_df = pd.DataFrame([last_ten_days_data])
-            ticker_df.to_json(
-                f"{app_path}/scrape/output/machine_readable/last_ten_days_mr_scraped_data_{ticker}_{dt.datetime.now().strftime('%Y%m%d%H%M')}.json"
-            )
+            # # Save the last ten days data to a JSON file
+            # with open(
+            #     f"{app_path}/scrape/output/machine_readable/ten_days_{ticker}_{dt.datetime.now().strftime('%Y%m%d%H%M')}.json",
+            #     "w",
+            # ) as file:
+            #     json.dump(last_ten_days_data[ticker], file)
 
         return last_ten_days_data
 
+    def add_features_to_historical_data(self, features_data):
+        for ticker, features in features_data.items():
+            # Load the existing historical data for the ticker
+            filename = f"{app_path}/scrape/output/machine_readable/historical_{ticker}_{dt.datetime.now().strftime('%Y%m%d%H%M')}.json"
+            with open(filename, "r") as file:
+                historical_data = json.load(file)
+                # add the features to the historical data
+                historical_data["Features"] = features
+
+            # Save the updated historical data to a JSON file
+            with open(filename, "w") as file:
+                json.dump(historical_data, file)
+
+    def add_bullish_engulfing_to_historical_data(self, pattern_data):
+        for ticker, pattern in pattern_data.items():
+            # Load the existing historical data for the ticker
+            filename = f"{app_path}/scrape/output/machine_readable/historical_{ticker}_{dt.datetime.now().strftime('%Y%m%d%H%M')}.json"
+            with open(filename, "r") as file:
+                historical_data = json.load(file)
+                # add the bullish engulfing pattern to the historical data
+                historical_data["Bullish_Engulfing_Pattern"] = pattern
+
+            # Save the updated historical data to a JSON file
+            with open(filename, "w") as file:
+                json.dump(historical_data, file)
+
+    def add_pattern_similarity_to_historical_data(self, pattern_similarity_data):
+        for ticker, correlation in pattern_similarity_data.items():
+            # Load the existing historical data for the ticker
+            filename = f"{app_path}/scrape/output/machine_readable/historical_{ticker}_{dt.datetime.now().strftime('%Y%m%d%H%M')}.json"
+            with open(filename, "r") as file:
+                historical_data = json.load(file)
+                # add the pattern similarity to the historical data
+                historical_data["Pattern_Similarity"] = correlation
+
+            # Save the updated historical data to a JSON file
+            with open(filename, "w") as file:
+                json.dump(historical_data, file)
+
+    def add_pattern_direction_to_historical_data(self, pattern_direction_data):
+        for ticker, direction in pattern_direction_data.items():
+            # Load the existing historical data for the ticker
+            filename = f"{app_path}/scrape/output/machine_readable/historical_{ticker}_{dt.datetime.now().strftime('%Y%m%d%H%M')}.json"
+            with open(filename, "r") as file:
+                historical_data = json.load(file)
+                # add the pattern direction to the historical data
+                historical_data["Pattern_Direction"] = direction
+
+            # Save the updated historical data to a JSON file
+            with open(filename, "w") as file:
+                json.dump(historical_data, file)
+
 
 if __name__ == "__main__":
-    # Parse command-line arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--ai", action="store_true", help="Use OpenAI and SerpAPI")
-    args = parser.parse_args()
-
     tickers = ["MSFT", "META", "NVDA", "FUBO", "MBRX"]
 
     rt_stock_data = RTStockData(tickers)
-    rt_stock_data.get_historical_ticker_data(tickers, "1y")
-    last_ten_days_data = rt_stock_data.get_last_ten_days()
+    rt_stock_data.store_historical_data("1y")
+    # Load historical data for the tickers
+    historical_data = {}
+    for ticker in tickers:
+        filename = f"{app_path}/scrape/output/machine_readable/historical_{ticker}_{dt.datetime.now().strftime('%Y%m%d%H%M')}.json"
+        with open(filename, "r") as file:
+            historical_data[ticker] = json.load(file)
+
+    last_ten_days_data = rt_stock_data.get_last_ten_days(historical_data)
+
+    # Continue with feature engineering as before
+    feature_engineering = FeatureEngineering(tickers)
+    features_data = feature_engineering.calculate_features(
+        historical_data, last_ten_days_data
+    )
+
+    # Pattern analysis calculations on last 10 days of data
+    pattern_engineering = FeatureEngineering(tickers)
+    # bullish_engulfing_data = pattern_engineering.calculate_bullish_engulfing(
+    #     last_ten_days_data
+    # )
+    # pattern_similarity_data = pattern_engineering.calculate_pattern_similarity(
+    #     last_ten_days_data
+    # )
+    # pattern_direction_data = pattern_engineering.calculate_pattern_direction(
+    #     last_ten_days_data
+    # )
+
+    # Add the calculated pattern analysis results to the existing JSON files
+    rt_stock_data.add_features_to_historical_data(features_data)
+    # rt_stock_data.add_bullish_engulfing_to_historical_data(bullish_engulfing_data)
+    # rt_stock_data.add_pattern_similarity_to_historical_data(pattern_similarity_data)
+    # rt_stock_data.add_pattern_direction_to_historical_data(pattern_direction_data)

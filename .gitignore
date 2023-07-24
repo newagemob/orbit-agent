@@ -1,4 +1,12 @@
 secret.py
 
-app/*/output/human_readable/*
 app/*/output/machine_readable/*
+app/*/output/classificationDatasets/*
+app/*/output/predictionDatasets/*
+
+# exclude all __pycache__ directories
+__pycache__/
+app/__pycache__/
+app/*/__pycache__/
+app/*/*/__pycache__/
+app/*/*/*/__pycache__/

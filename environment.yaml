@@ -16,3 +16,8 @@ dependencies:
     - google-search-results
     - yfinance
     - beautifulsoup4
+    - transformers
+    - torch
+    - tensorflow
+    - keras
+    - accelerate
