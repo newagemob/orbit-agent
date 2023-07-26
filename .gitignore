@@ -5,8 +5,7 @@ app/*/output/classificationDatasets/*
 app/*/output/predictionDatasets/*
 
 # exclude all __pycache__ directories
-__pycache__/
-app/__pycache__/
-app/*/__pycache__/
-app/*/*/__pycache__/
-app/*/*/*/__pycache__/
+__pycache__
+*/__pycache__/
+*/*/__pycache__/
+*/*/*/__pycache__/

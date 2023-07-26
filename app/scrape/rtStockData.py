@@ -141,18 +141,6 @@ if __name__ == "__main__":
 
     # Pattern analysis calculations on last 10 days of data
     pattern_engineering = FeatureEngineering(tickers)
-    # bullish_engulfing_data = pattern_engineering.calculate_bullish_engulfing(
-    #     last_ten_days_data
-    # )
-    # pattern_similarity_data = pattern_engineering.calculate_pattern_similarity(
-    #     last_ten_days_data
-    # )
-    # pattern_direction_data = pattern_engineering.calculate_pattern_direction(
-    #     last_ten_days_data
-    # )
 
     # Add the calculated pattern analysis results to the existing JSON files
     rt_stock_data.add_features_to_historical_data(features_data)
-    # rt_stock_data.add_bullish_engulfing_to_historical_data(bullish_engulfing_data)
-    # rt_stock_data.add_pattern_similarity_to_historical_data(pattern_similarity_data)
-    # rt_stock_data.add_pattern_direction_to_historical_data(pattern_direction_data)

@@ -1,6 +1,6 @@
 name: orbit-agent
 channels:
-  - defaults
+  - apple
   - conda-forge
 dependencies:
   - python=3.11
@@ -18,6 +18,8 @@ dependencies:
     - beautifulsoup4
     - transformers
     - torch
-    - tensorflow
+    - tensorflow-macos
+    - tensorflow-metal
     - keras
     - accelerate
+    - statsmodels

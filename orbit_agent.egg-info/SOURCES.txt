@@ -3,6 +3,10 @@ setup.py
 app/__init__.py
 app/dataHandler/__init__.py
 app/dataHandler/featureEngineering.py
+app/dataHandler/stockClassificationProcessor.py
+app/dataHandler/stockPredictionProcessor.py
+app/modelHandler/__init__.py
+app/modelHandler/fineTuneTradingAdvisor.py
 app/scrape/__init__.py
 app/scrape/rtStockData.py
 app/tot/__init__.py

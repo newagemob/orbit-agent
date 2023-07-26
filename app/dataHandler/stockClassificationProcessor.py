@@ -66,6 +66,19 @@ class StockClassificationDatasetProcessor:
         else:
             return "Hold"
 
+    def combine_datasets(self):
+        # Combine all the datasets into a single csv file
+        classificationDatasetsPath = (
+            f"{app_path}/dataHandler/output/classificationDatasets"
+        )
+        datasets = []
+        for file in Path(classificationDatasetsPath).glob("*.csv"):
+            datasets.append(pd.read_csv(file))
+        combined_dataset = pd.concat(datasets)
+        combined_dataset.to_csv(
+            f"{app_path}/dataHandler/output/classificationDatasets/combined_dataset.csv"
+        )
+
 
 if __name__ == "__main__":
     import json
@@ -75,3 +88,5 @@ if __name__ == "__main__":
 
         data_processor = StockClassificationDatasetProcessor(json_data)
         dataset = data_processor.create_dataset()
+
+    data_processor.combine_datasets()
