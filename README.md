@@ -1,4 +1,6 @@
-# ORBIT Agent
+# 🛰️ ORBIT Agent
+
+_Optimized Risk Based Intelligence Trading_
 
 ***FOSS Financial Machine Learning Agent - Stock Classification | Stock Price Prediction***
 
